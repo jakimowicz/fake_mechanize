@@ -1,0 +1,7 @@
+= fake_mechanize
+
+Description goes here.
+
+== Copyright
+
+Copyright (c) 2009 Fabien Jakimowicz. See LICENSE for details.
