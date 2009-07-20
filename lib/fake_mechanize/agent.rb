@@ -1,4 +1,10 @@
+# = FakeMechanize module
+# FakeMechanize provides methods and classes to write tests for applications which relies on Mechanize.
+# == Examples
+# 
 module FakeMechanize
+  # Agent acts like the original Mechanize::Agent but totally offline.
+  # It provides a respond_to method to predefine queries and their answers.
   class Agent
     attr_accessor :cookie_jar
 
@@ -23,6 +29,20 @@ module FakeMechanize
       return_mechanize_response Request.new(:method => :post, :uri => uri, :request_headers => args)
     end
     
+    def assert_queried(method, uri, params = {})
+      request = Request.new(:method => method, :uri => uri, :request_headers => params)
+      @history.any? {|history_query| history_query == request}
+    end
+    
+    HttpVerbs.each do |method|
+      module_eval <<-EOE, __FILE__, __LINE__
+        def was_#{method}?(uri, params = {})
+          assert_queried(:#{method}, uri, params)
+        end
+      EOE
+    end
+    
+    protected
     def return_mechanize_response(given_request)
       @history << given_request
       request = search_for_request(given_request)
@@ -39,20 +59,6 @@ module FakeMechanize
       @errors.max_by {|request| request.match(given_request)}
     end
     
-    def assert_queried(method, uri, params = {})
-      request = Request.new(:method => method, :uri => uri, :request_headers => params)
-      @history.any? {|history_query| history_query == request}
-    end
-    
-    [:head, :get, :post, :put, :delete].each do |method|
-      module_eval <<-EOE, __FILE__, __LINE__
-        def was_#{method}?(uri, params = {})
-          assert_queried(:#{method}, uri, params)
-        end
-      EOE
-    end
-      
-    protected
     def reset_responses!
       @responses.clear
     end
