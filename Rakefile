@@ -10,6 +10,7 @@ begin
     gem.homepage = "http://github.com/jakimowicz/fake_mechanize"
     gem.authors = ["Fabien Jakimowicz"]
     gem.rubyforge_project = "fake_mechanize"
+    gem.add_dependency 'mechanize'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
@@ -41,18 +42,7 @@ end
 
 task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION.yml')
-    config = YAML.load(File.read('VERSION.yml'))
-    version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
-  else
-    version = ""
-  end
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "fake_mechanize #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+desc "build rdoc using hanna theme"
+task :rdoc do
+  `rm -rf rdoc && rdoc --op=rdoc --title=FakeMechanize --inline-source --format=darkfish LICENSE README* lib/**/*.rb`
 end
-
