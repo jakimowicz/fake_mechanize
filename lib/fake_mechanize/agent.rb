@@ -21,14 +21,6 @@ module FakeMechanize
       @errors << ErrorRequest.new(:status => 404, :body => "not found")
     end
     
-    def get(uri)
-      return_mechanize_response Request.new(:uri => uri)
-    end
-    
-    def post(uri, args = {})
-      return_mechanize_response Request.new(:method => :post, :uri => uri, :request_headers => args)
-    end
-    
     def assert_queried(method, uri, params = {})
       request = Request.new(:method => method, :uri => uri, :request_headers => params)
       @history.any? {|history_query| history_query == request}
@@ -38,6 +30,10 @@ module FakeMechanize
       module_eval <<-EOE, __FILE__, __LINE__
         def was_#{method}?(uri, params = {})
           assert_queried(:#{method}, uri, params)
+        end
+        
+        def #{method}(uri, args = {})
+          return_mechanize_response Request.new(:method => :#{method}, :uri => uri, :request_headers => args)
         end
       EOE
     end
