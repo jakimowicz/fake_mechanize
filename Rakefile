@@ -9,7 +9,7 @@ begin
     gem.email = "fabien@jakimowicz.com"
     gem.homepage = "http://github.com/jakimowicz/fake_mechanize"
     gem.authors = ["Fabien Jakimowicz"]
-    gem.rubyforge_project = "fake_mechanize"
+    gem.rubyforge_project = "fake-mechanize"
     gem.add_dependency 'mechanize'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
