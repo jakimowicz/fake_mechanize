@@ -19,7 +19,7 @@
 #               :body => "true"
 #
 #     # Answers to post queries to http://api.example.com/users/authentify
-#     # with the string "Qt5c1HWwCXDhKskMrBqMdQ"
+#     # with the string "Qt5c1HWwCXDhKskMrBqMdQ".
 #     # This example could be an authentication process
 #     mock.post   :uri => "http://api.example.com/users/authentify",
 #                 :request_headers   => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
@@ -39,12 +39,14 @@
 #   r.body # => "42"
 #
 #   # Posting
-#   r = mock.post("http://api.example.com/users/authentify", :Email => "jack@bauer.com", :Passwd => "secure")
+#   r = mock.post("http://api.example.com/users/authentify",
+#                 :Email => "jack@bauer.com", :Passwd => "secure")
 #   r.status # => 200
 #   r.body   # => "Qt5c1HWwCXDhKskMrBqMdQ"
 #
 #   # Handling errors
-#   r = mock.post("http://api.example.com/users/authentify", :Email => "jack@bauer.com", :Passwd => "bad")
+#   r = mock.post("http://api.example.com/users/authentify",
+#                 :Email => "jack@bauer.com", :Passwd => "bad")
 #   r.status # => 403
 #   r.body   # => nil
 # 
