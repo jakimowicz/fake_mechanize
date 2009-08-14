@@ -1,12 +1,39 @@
 = fake-mechanize
 
 == DESCRIPTION
-Description goes here.
+FakeMechanize provides methods and classes to write offline tests for applications which relies on Mechanize.
+It replace Mechanize and emulate an agent which aim to act like a real Mechanize Agent.
+Fake agent accepts options to define queries and their answers.
 
 == SYNOPSIS
 === Options
 === Types
 === Examples
+* Simple examples to test a basic api
+
+   # Initialize a fake agent
+   @http_agent = FakeMechanize::Agent.new
+   # Create answers and their params
+   @http_agent.respond_to do |mock|
+     # Answers to get queries to http://api.example.com/users/count?group=students with the string "42"
+     mock.get :uri => "http://api.example.com/users/count",
+       :request_headers => {:group => "students"},
+       :body => "42"
+     # Answers to post queries to http://api.example.com/users/3/activate with the string "true"
+     mock.post :uri => "http://api.example.com/users/3/activate",
+       :body => "true"
+     # Answers to post queries to http://api.example.com/users/authentify with the string "Qt5c1HWwCXDhKskMrBqMdQ"
+     # This example could be an authentication process
+     mock.post   :uri => "http://api.example.com/users/authentify",
+       :request_headers   => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
+       :body => "Qt5c1HWwCXDhKskMrBqMdQ"
+     # Will reply with an http error code of 403 with no body if the post query to http://api.example.com/users/authentify
+     # does not have specified parameters.
+     mock.error  :uri => "http://api.example.com/users/authentify",
+       :params_not_equal  => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
+       :method => :post,
+       :status => 403
+   end
 
 == REQUIREMENTS
 

@@ -7,6 +7,9 @@ module FakeMechanize
       @params_not_equal = args[:params_not_equal]
     end
     
+    # Compute a match between <tt>alt</tt> and current instance, returning an integer.
+    # Computation is based on http method, uri and request_headers.
+    # The idea behind this match rate is to find the best ErrorRequest matching a query.
     def match(alt)
       count = 0
 
