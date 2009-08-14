@@ -44,5 +44,5 @@ task :default => :test
 
 desc "build rdoc using hanna theme"
 task :rdoc do
-  `rm -rf rdoc && rdoc --op=rdoc --title=FakeMechanize --inline-source --format=darkfish LICENSE README* lib/**/*.rb`
+  `rm -rf rdoc && rdoc --op=rdoc --title=FakeMechanize --main=README.rdoc --format=darkfish LICENSE README* lib/**/*.rb`
 end
