@@ -18,9 +18,9 @@ module FakeMechanize
       count += 1 if uri     == alt.uri
 
       # More complicated: evaluates if params are equals or if they are different on purpose
-      if !request_headers.empty? and request_headers == alt.request_headers
+      if !parameters.empty? and parameters == alt.parameters
         count += 1
-      elsif method == alt.method and uri == alt.uri and request_headers != params_not_equal
+      elsif method == alt.method and uri == alt.uri and parameters != params_not_equal
         count += 1
       end
 

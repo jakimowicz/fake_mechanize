@@ -10,7 +10,7 @@
 #     # Answers to get queries to http://api.example.com/users/count?group=students
 #     # with the string "42"
 #     mock.get :uri => "http://api.example.com/users/count",
-#              :request_headers => {:group => "students"},
+#              :parameters => {:group => "students"},
 #              :body => "42"
 #
 #     # Answers to post queries to http://api.example.com/users/3/activate
@@ -22,7 +22,7 @@
 #     # with the string "Qt5c1HWwCXDhKskMrBqMdQ".
 #     # This example could be an authentication process
 #     mock.post   :uri => "http://api.example.com/users/authentify",
-#                 :request_headers   => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
+#                 :parameters   => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
 #                 :body => "Qt5c1HWwCXDhKskMrBqMdQ"
 #
 #     # Will reply with an http error code of 403 with no body if the post query
@@ -72,7 +72,7 @@ module FakeMechanize
     end
     
     def assert_queried(method, uri, params = {})
-      request = Request.new(:method => method, :uri => uri, :request_headers => params)
+      request = Request.new(:method => method, :uri => uri, :parameters => params)
       @history.any? {|history_query| history_query == request}
     end
     
@@ -83,7 +83,9 @@ module FakeMechanize
         end
         
         def #{method}(uri, args = {})
-          return_mechanize_response Request.new(:method => :#{method}, :uri => uri, :request_headers => args)
+          return_mechanize_response Request.new(:method     => :#{method},
+                                                :uri        => uri,
+                                                :parameters => args)
         end
       EOE
     end

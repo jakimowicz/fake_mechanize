@@ -25,13 +25,12 @@ end
 module TinyUrl
   def self.mechanize_agent
     if @http_agent.nil?
-      @http_agent = FakeMechanize::Agent.new
-      @http_agent.respond_to do |mock|
+      @http_agent = FakeMechanize::Agent.new do |mock|
         mock.get :uri => ApiAddress,
-          :request_headers => {:url => "http://www.google.com"},
+          :parameters => {:url => "http://www.google.com"},
           :body => "http://tinyurl.com/dehdc"
         mock.get :uri => ApiAddress,
-          :request_headers => {:url => "https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2702-single-table-inherited-model-generator"},
+          :parameters => {:url => "https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2702-single-table-inherited-model-generator"},
           :body => "http://tinyurl.com/pucvt5"
       end
     end
