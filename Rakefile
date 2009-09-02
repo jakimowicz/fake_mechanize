@@ -42,7 +42,16 @@ end
 
 task :default => :test
 
-desc "build rdoc using hanna theme"
-task :rdoc do
-  `rm -rf rdoc && rdoc --op=rdoc --title=FakeMechanize --main=README.rdoc --format=darkfish LICENSE README* lib/**/*.rb`
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION')
+    version = File.read('VERSION')
+  else
+    version = ""
+  end
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "FakeMechanize #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
 end
