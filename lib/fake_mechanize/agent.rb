@@ -56,16 +56,18 @@ module FakeMechanize
   class Agent
     attr_accessor :cookie_jar
 
-    def initialize
+    def initialize(&block)
       @cookie_jar = WWW::Mechanize::CookieJar.new
       @responses  = []
       @errors     = []
       @history    = []
+      
+      respond_to(&block) if block_given?
     end
   
     def respond_to
       reset_responses!
-      yield Responder.new(@responses, @errors)
+      yield Responder.new(@responses, @errors) if block_given?
       @errors << ErrorRequest.new(:status => 404, :body => "not found")
     end
     
