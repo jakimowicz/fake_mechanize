@@ -76,6 +76,10 @@ module FakeMechanize
       @history.any? {|history_query| history_query == request}
     end
     
+    # Get method. Called like get method from the real Mechanize gem.
+    # Get can be achieved by two ways :
+    # * <tt>options</tt> is a String representing the url to call and <tt>parameters</tt> a hash for the parameters.
+    # * <tt>options</tt> is a Hash with <tt>:url</tt> the url and <tt>:params</tt> the parameters.
     def get(options, parameters = nil)
       if options.is_a? Hash
         # TODO raise a Mechanize exception
@@ -87,6 +91,9 @@ module FakeMechanize
       return_mechanize_response Request.new(:method => :get, :uri => url, :parameters => parameters)
     end
     
+    # Post method. Called like post method from the real Mechanize gem.
+    # <tt>url</tt> is the url to post.
+    # <tt>query</tt> is a Hash of parameters.
     def post(url, query = {})
       return_mechanize_response Request.new(:method => :post, :uri => url, :parameters => query)
     end
