@@ -1,61 +1,12 @@
-# = FakeMechanize module
-# FakeMechanize provides methods and classes to write offline tests for applications which relies on Mechanize.
-# == Examples
-#   # Initialize a fake agent
-#   @http_agent = FakeMechanize::Agent.new
-#   
-#   # Create answers and their params
-#   @http_agent.respond_to do |mock|
-#
-#     # Answers to get queries to http://api.example.com/users/count?group=students
-#     # with the string "42"
-#     mock.get :uri => "http://api.example.com/users/count",
-#              :parameters => {:group => "students"},
-#              :body => "42"
-#
-#     # Answers to post queries to http://api.example.com/users/3/activate
-#     # with the string "true"
-#     mock.post :uri => "http://api.example.com/users/3/activate",
-#               :body => "true"
-#
-#     # Answers to post queries to http://api.example.com/users/authentify
-#     # with the string "Qt5c1HWwCXDhKskMrBqMdQ".
-#     # This example could be an authentication process
-#     mock.post   :uri => "http://api.example.com/users/authentify",
-#                 :parameters   => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
-#                 :body => "Qt5c1HWwCXDhKskMrBqMdQ"
-#
-#     # Will reply with an http error code of 403 with no body if the post query
-#     # to http://api.example.com/users/authentify does not have specified parameters.
-#     mock.error  :uri => "http://api.example.com/users/authentify",
-#                 :params_not_equal  => {:Email => 'jack@bauer.com', :Passwd => 'secure'},
-#                 :method => :post,
-#                 :status => 403
-#   end
-#   
-#   # Now you can use this agent like a real one
-#   r = mock.get("http://api.example.com/users/count", :group => "students")
-#   # => WWW::Mechanize::File
-#   r.body # => "42"
-#
-#   # Posting
-#   r = mock.post("http://api.example.com/users/authentify",
-#                 :Email => "jack@bauer.com", :Passwd => "secure")
-#   r.status # => 200
-#   r.body   # => "Qt5c1HWwCXDhKskMrBqMdQ"
-#
-#   # Handling errors
-#   r = mock.post("http://api.example.com/users/authentify",
-#                 :Email => "jack@bauer.com", :Passwd => "bad")
-#   r.status # => 403
-#   r.body   # => nil
-# 
 module FakeMechanize
   # Agent acts like the original Mechanize::Agent but totally offline.
   # It provides a respond_to method to predefine queries and their answers.
   class Agent
+    # Represents a cookie jar built from WWW::Mechanize::CookieJar
     attr_accessor :cookie_jar
 
+    # Create a new fake agent.
+    # Can be initialized with a block, see <tt>respond_to</tt> for more details.
     def initialize(&block)
       @cookie_jar = WWW::Mechanize::CookieJar.new
       @responses  = []
@@ -71,6 +22,11 @@ module FakeMechanize
       @errors << ErrorRequest.new(:status => 404, :body => "not found")
     end
     
+    # Returns true if query defined by <tt>method</tt>, <tt>uri</tt> and <tt>options</tt> was made.
+    # False otherwise.
+    # * <tt>method</tt> can be one of the following: :get, :post.
+    # * <tt>uri</tt> is a String that represents the called url.
+    # * <tt>options</tt> is an optional hash to specify parameters, headers ... Only :parameters options is actually supported.
     def assert_queried(method, uri, options = {})
       request = Request.new(:method => method, :uri => uri, :parameters => options[:parameters])
       @history.any? {|history_query| history_query == request}
@@ -107,6 +63,8 @@ module FakeMechanize
     end
     
     protected
+    # Add <tt>given_request</tt> to history, search if for a matching query
+    # and returns a response or raise an error if http status is not 200.
     def return_mechanize_response(given_request)
       @history << given_request
       request = search_for_request(given_request)
@@ -115,6 +73,7 @@ module FakeMechanize
       page
     end
     
+    # Search through available <tt>@responses</tt> if <tt>given_request</tt> matches one of the defined responses.
     def search_for_request(given_request)
       @responses.find {|request| request == given_request} || search_for_error_request(given_request)
     end
