@@ -2,7 +2,8 @@ require 'rubygems'
 require 'mechanize'
 
 module FakeMechanize
-  HttpVerbs = [:head, :get, :post, :put, :delete]
+  # Supported http verbs
+  HttpVerbs = [:get, :post]
 end
 
 require 'fake_mechanize/request'
