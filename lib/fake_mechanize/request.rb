@@ -17,6 +17,14 @@ module FakeMechanize
     # Responses headers passed with status and body
     attr_reader :response_headers
     
+    # Create a new Request with the following options :
+    # * <tt>:method</tt>: http method (verb) to respond to (:get, :post, ...).
+    # * <tt>:uri</tt> or <tt>:url</tt>: string which represents the queried url.
+    # * <tt>:request_headers</tt>: optionnals headers passed while querying.
+    # * <tt>:parameters</tt>: an optionnals hash of parameters, like the one passed in an html form or inlined in a get query.
+    # * <tt>:body</tt>: body that should be returned if query match. Defaut is nil.
+    # * <tt>:status</tt>: http status response code (200, 404, ...). Default is 200.
+    # * <tt>:response_headers</tt>: an optionnal hash for response headers.
     def initialize(args = {})
       # Query
       @method           = args[:method] || :get

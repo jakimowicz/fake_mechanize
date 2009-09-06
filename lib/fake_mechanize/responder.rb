@@ -1,9 +1,12 @@
 module FakeMechanize
+  # Responder is a class responsible for creation of responses and errors requests.
   class Responder
     def initialize(responses, errors)
       @responses, @errors = responses, errors
     end
     
+    # Create a new error request. See ErrorRequest for options.
+    # If <tt>:method</tt> is omited, all http verbs can answer.
     def error(args)
       if args[:method]
         @errors << ErrorRequest.new(args)
