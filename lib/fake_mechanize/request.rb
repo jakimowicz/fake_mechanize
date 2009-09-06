@@ -20,7 +20,7 @@ module FakeMechanize
     def initialize(args = {})
       # Query
       @method           = args[:method] || :get
-      @uri              = args[:uri]
+      @uri              = args[:url] || args[:uri]
       @request_headers  = args[:request_headers] || {}
       @parameters       = args[:parameters] || {}
       

@@ -71,21 +71,30 @@ module FakeMechanize
       @errors << ErrorRequest.new(:status => 404, :body => "not found")
     end
     
-    def assert_queried(method, uri, params = {})
-      request = Request.new(:method => method, :uri => uri, :parameters => params)
+    def assert_queried(method, uri, options = {})
+      request = Request.new(:method => method, :uri => uri, :parameters => options[:parameters])
       @history.any? {|history_query| history_query == request}
+    end
+    
+    def get(options, parameters = nil)
+      if options.is_a? Hash
+        # TODO raise a Mechanize exception
+        raise "no url specified" unless url = options[:url]
+        parameters = options[:params]
+      else
+        url = options
+      end
+      return_mechanize_response Request.new(:method => :get, :uri => url, :parameters => parameters)
+    end
+    
+    def post(url, query = {})
+      return_mechanize_response Request.new(:method => :post, :uri => url, :parameters => query)
     end
     
     HttpVerbs.each do |method|
       module_eval <<-EOE, __FILE__, __LINE__
-        def was_#{method}?(uri, params = {})
-          assert_queried(:#{method}, uri, params)
-        end
-        
-        def #{method}(uri, args = {})
-          return_mechanize_response Request.new(:method     => :#{method},
-                                                :uri        => uri,
-                                                :parameters => args)
+        def was_#{method}?(uri, options = {})
+          assert_queried(:#{method}, uri, options)
         end
       EOE
     end
